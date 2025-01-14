@@ -2,6 +2,7 @@ package telran.game;
 
 import java.time.LocalDate;
 import java.util.*;
+
 import org.json.*;
 import telran.net.NetworkClient;
 
@@ -45,17 +46,19 @@ public class BullsCowsNetProxy implements BullsCowsService {
     }
 
     @Override
-    public List<MoveResult> makeMove(String username, long gameId, String sequece) {
+    public List<MoveResult> makeMove(String username, long gameId, String sequence) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", username);
         jsonObject.put("gameId", gameId);
-        jsonObject.put("sequece", sequece);
+        jsonObject.put("sequence", sequence);
         String res = client.sendAndReceive("makeMove", jsonObject.toString());
         JSONArray jsonArray = new JSONArray(res);
-        JSONObject[] jsonObjects = jsonArray.toList().toArray(JSONObject[]::new);
-        return Arrays.stream(jsonObjects)
-                .map(j -> new MoveResult(j.getString("sequece"), Integer.parseInt(j.getString("bulls")), Integer.parseInt(j.getString("cows"))))
-                        .toList();
+        List<MoveResult> resList = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject j = jsonArray.getJSONObject(i);
+            resList.add(new MoveResult(j.getString("sequence"), j.getInt("bulls"), j.getInt("cows")));
+        }
+        return resList;
     }
 
     @Override
@@ -74,4 +77,10 @@ public class BullsCowsNetProxy implements BullsCowsService {
         client.sendAndReceive("startGame", jsonObject.toString());
     }
 
+    @Override
+    public List<Long> getListPlaybleGames(String username) {
+        String res = client.sendAndReceive("getListPlaybleGames", username);
+        JSONArray jsonArray = new JSONArray(res);
+        return jsonArray.toList().stream().map(o -> Long.parseLong(o.toString())).toList();
+    }
 }

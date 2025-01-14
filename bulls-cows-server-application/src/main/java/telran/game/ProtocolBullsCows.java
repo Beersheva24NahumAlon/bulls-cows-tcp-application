@@ -87,4 +87,28 @@ public class ProtocolBullsCows implements Protocol {
         JSONArray jsonArray = new JSONArray(games);
         return new Response(ResponseCode.OK, jsonArray.toString());
     }
+
+    private Response getListPlaybleGames(String data) {
+        String username = data;
+        List<Long> games = service.getListPlaybleGames(username);
+        JSONArray jsonArray = new JSONArray(games);
+        return new Response(ResponseCode.OK, jsonArray.toString());
+    }
+
+    private Response makeMove(String data) {
+        JSONObject jsonObject = new JSONObject(data);
+        String username = jsonObject.getString("username");
+        long gameId = jsonObject.getLong("gameId");
+        String sequence = jsonObject.getString("sequence");
+        List<MoveResult> resList = service.makeMove(username, gameId, sequence);
+        JSONObject[] jsonObjects = resList.stream().map(m -> {
+            JSONObject j = new JSONObject();
+            j.put("sequence", m.sequence());
+            j.put("bulls", m.bulls());
+            j.put("cows", m.cows());
+            return j;
+        }).toArray(JSONObject[]::new);
+        JSONArray jsonArray = new JSONArray(jsonObjects);
+        return new Response(ResponseCode.OK, jsonArray.toString());
+    }
 }
