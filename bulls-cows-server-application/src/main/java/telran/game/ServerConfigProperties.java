@@ -5,5 +5,6 @@ public interface ServerConfigProperties {
     int SAVING_DELAY = 5;
     int BAD_RESPONSES = 20;
     int REQUEST_PER_SECOND = 100;
-    int TOTAL_TIMEOUT = 50000;
+    int TOTAL_TIMEOUT = 360000;
+    int N_THREADS = 10;
 }

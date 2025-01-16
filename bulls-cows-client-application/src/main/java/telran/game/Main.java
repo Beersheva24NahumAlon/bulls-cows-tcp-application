@@ -7,14 +7,12 @@ import java.util.Arrays;
 import telran.net.*;
 import telran.view.*;
 
-public class Main {
-    //private static final String HOST = "localhost";
-    private static final String HOST = "54.147.210.32";
-    private static final int PORT = 5000;
+public class Main { 
 
     public static void main(String[] args) {
         InputOutput io = new StandardInputOutput();
-        NetworkClient client = new TcpClient(HOST, PORT);
+        String host = args.length == 1 ? args[0] : "localhost"; 
+        NetworkClient client = new TcpClient(host, 5000);
         BullsCowsService game = new BullsCowsNetProxy(client);
         Item[] items = BullsCowsItems.getItems(game);
         items = addExitItem(items, client);

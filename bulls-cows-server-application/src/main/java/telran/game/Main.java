@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         BullsCowsService service = new BullsCowsServiceImpl();
         Protocol protocol = new ProtocolBullsCows(service);
-        TcpServer server = new TcpServer(protocol, PORT, BAD_RESPONSES, REQUEST_PER_SECOND, TOTAL_TIMEOUT);
+        TcpServer server = new TcpServer(protocol, PORT, BAD_RESPONSES, REQUEST_PER_SECOND, TOTAL_TIMEOUT, N_THREADS);
         Thread threadTcpServer = new Thread(server);
         threadTcpServer.start();
         Scanner scanner = new Scanner(System.in); 
